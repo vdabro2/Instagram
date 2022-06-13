@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 Intent i = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(i);
+
             }
         });
         queryPosts();
