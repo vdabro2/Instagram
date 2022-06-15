@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragments.ComposeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <Button
+        android:id="@+id/bLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout" />
+
+    <Button
+        android:id="@+id/bSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:text="submit" />
+
+    <EditText
+        android:id="@+id/etDescription"
+        android:layout_width="401dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="description..."
+        android:inputType="textPersonName"
+        />
+
+    <Button
+        android:id="@+id/bTakePic"
+        android:layout_width="168dp"
+        android:layout_height="53dp"
+        android:layout_marginEnd="16dp"
+        android:text="Take picture"
+         />
+
+    <ImageView
+        android:id="@+id/ivPic"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+</LinearLayout>

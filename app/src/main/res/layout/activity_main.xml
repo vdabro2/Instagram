@@ -10,60 +10,58 @@
         android:id="@+id/bLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="684dp"
-        android:layout_marginBottom="10dp"
         android:text="Logout"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivPic" />
+
+    <Button
+        android:id="@+id/bSubmit"
+        android:layout_width="169dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:text="submit"
+        app:layout_constraintEnd_toStartOf="@+id/bTakePic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etDescription" />
+
+    <EditText
+        android:id="@+id/etDescription"
+        android:layout_width="401dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="description..."
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/bSubmit"
-        android:layout_width="410dp"
-        android:layout_height="42dp"
-        android:text="submit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="181dp" />
-
-    <EditText
-        android:id="@+id/etDescription"
-        android:layout_width="401dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
-        android:ems="10"
-        android:hint="description..."
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/bTakePic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.323" />
-
-    <Button
         android:id="@+id/bTakePic"
-        android:layout_width="401dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="96dp"
+        android:layout_width="168dp"
+        android:layout_height="53dp"
+        android:layout_marginEnd="16dp"
         android:text="Take picture"
-        app:layout_constraintBottom_toTopOf="@+id/bSubmit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/etDescription" />
 
     <ImageView
         android:id="@+id/ivPic"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:layout_marginBottom="261dp"
-        app:layout_constraintBottom_toTopOf="@+id/bLogout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bSubmit"
-        tools:layout_editor_absoluteX="155dp"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="413dp"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_bottom_navigation" />
 </androidx.constraintlayout.widget.ConstraintLayout>
