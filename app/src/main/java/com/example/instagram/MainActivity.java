@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         bTakePic = findViewById(R.id.bTakePic);
         bSubmit = findViewById(R.id.bSubmit);
         etDescription = findViewById(R.id.etDescription);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         ivPic = findViewById(R.id.ivPic);
         bLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +85,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 launchCamera();
+            }
+        });
+
+        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_post:
+                        Intent i = new Intent(MainActivity.this, MainActivity.class);
+                        startActivity(i);
+                        return true;
+                    case R.id.action_home:
+                        Intent in = new Intent(MainActivity.this, FeedActivity.class);
+                        startActivity(in);
+                        // do something here
+                        return true;
+                    case R.id.action_prof:
+                        // do something here
+                        Intent inte = new Intent(MainActivity.this, ProfileActivity.class);
+                        startActivity(inte);
+                        return true;
+                    default: return true;
+                }
             }
         });
 
