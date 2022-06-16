@@ -2,6 +2,8 @@ package com.example.instagram;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,6 +20,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.instagram.fragments.ComposeFragment;
+import com.example.instagram.fragments.PostsFragment;
+import com.example.instagram.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -32,7 +37,7 @@ import androidx.appcompat.widget.Toolbar;
 
 
 public class FeedActivity extends AppCompatActivity {
-    RecyclerView rvPosts;
+    //RecyclerView rvPosts;
     private SwipeRefreshLayout swipeContainer;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
@@ -42,46 +47,45 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed);
+        setContentView(R.layout.activity_main);
 
-        rvPosts = findViewById(R.id.rvPosts);
-        allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(this, allPosts);
-        toolBar = findViewById(R.id.toolbar);
+        //rvPosts = findViewById(R.id.rvPosts);
+        //allPosts = new ArrayList<>();
+        //adapter = new PostsAdapter(this, allPosts);
+        ///toolBar = findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolBar);
-
-        //getSupportActionBar().setIcon(R.drawable.nav_logo_whiteout);
+        //setSupportActionBar(toolBar);
 
 
 
-        rvPosts.setAdapter(adapter);
+
+        //rvPosts.setAdapter(adapter);
         // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new LinearLayoutManager(this));
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        //rvPosts.setLayoutManager(new LinearLayoutManager(this));
+        //swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        //swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            ///@Override
+            //public void onRefresh() {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                queryPosts();
-                swipeContainer.setRefreshing(false);
-            }
-        });
+                //queryPosts();
+              //  swipeContainer.setRefreshing(false);
+          //  }
+       // });
         // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+       // swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+               // android.R.color.holo_green_light,
+               // android.R.color.holo_orange_light,
+               // android.R.color.holo_red_light);
         // query posts from Parstagra
-        queryPosts();
+        //queryPosts();
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        //bottomNavigationView = findViewById(R.id.bottom_navigation);
 
 
-
+/*
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -103,7 +107,43 @@ public class FeedActivity extends AppCompatActivity {
                     default: return true;
                 }
             }
+        });*/
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+
+        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment = new Fragment();
+                switch (item.getItemId()) {
+                    case R.id.action_post:
+                        //Intent i = new Intent(MainActivity.this, MainActivity.class);
+                        //startActivity(i);
+                        fragment = new ComposeFragment();
+                        //return true;
+                        break;
+                    case R.id.action_home:
+                        //Intent in = new Intent(MainActivity.this, FeedActivity.class);
+                        //startActivity(in);
+                        fragment = new PostsFragment();
+                        // do something here
+                        //return true;
+                        break;
+                    case R.id.action_prof:
+                        // do something here
+                        //Intent inte = new Intent(MainActivity.this, ProfileActivity.class);
+                        fragment = new ProfileFragment();
+                        //startActivity(inte);
+                        break;
+                    default: break;
+                }
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                return true;
+            }
         });
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
 
     }
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,6 +27,7 @@ import com.example.instagram.LoginActivity;
 import com.example.instagram.MainActivity;
 import com.example.instagram.Post;
 import com.example.instagram.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -34,6 +36,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -42,13 +45,15 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ComposeFragment extends Fragment {
-    Button bLogout;
-    Button bTakePic;
+
+
+    FloatingActionButton bCamera;
+    public final static int REQUEST_CODE_GALLERY = 43;
+    FloatingActionButton bGallery;
     Button bSubmit;
     EditText etDescription;
     ImageView ivPic;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
-
     public String photoFileName = "photo.jpg";
     File photoFile;
     File profilePhoto;
@@ -105,23 +110,12 @@ public class ComposeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects here
         // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
-        bLogout = view.findViewById(R.id.bLogout);
-        bTakePic = view.findViewById(R.id.bTakePic);
+
         bSubmit = view.findViewById(R.id.bSubmit);
         etDescription = view.findViewById(R.id.etDescription);
         ivPic = view.findViewById(R.id.ivPic);
-
-        bLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseUser.logOutInBackground();
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                Intent i = new Intent(getContext(), LoginActivity.class);
-                startActivity(i);
-
-
-            }
-        });
+        bCamera = view.findViewById(R.id.bCamera);
+        bGallery = view.findViewById(R.id.bGallery);
         //queryPosts();
         bSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,10 +133,20 @@ public class ComposeFragment extends Fragment {
                 startActivity(i);
             }
         });
-        bTakePic.setOnClickListener(new View.OnClickListener() {
+        bCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchCamera();
+            }
+        });
+        bGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                photoFile = getPhotoFileUri(photoFileName);
+                intent.setType("image/'");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
             }
         });
     }
@@ -161,6 +165,10 @@ public class ComposeFragment extends Fragment {
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK) {
+            Uri image = data.getData();
+            ivPic.setImageURI(image);
+
         }
     }
 
