@@ -37,11 +37,11 @@
         android:id="@+id/tvDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="3dp"
         app:layout_constraintEnd_toEndOf="@+id/ivImage"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/tvUserInDes"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="@+id/tvUserInDes"
         tools:text="trying to look hipster" />
 
     <TextView
@@ -71,13 +71,22 @@
         android:text="TextView"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/ivImage"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLikes" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/ivLikes"
         android:layout_width="41dp"
         android:layout_height="33dp"
         app:layout_constraintStart_toStartOf="@+id/ivImage"
         app:layout_constraintTop_toBottomOf="@+id/ivImage"
         app:srcCompat="@drawable/ufi_heart" />
+
+    <TextView
+        android:id="@+id/tvLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivLikes" />
 </androidx.constraintlayout.widget.ConstraintLayout>

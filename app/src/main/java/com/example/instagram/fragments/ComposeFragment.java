@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.instagram.EndlessRecyclerViewScrollListener;
 import com.example.instagram.FeedActivity;
 import com.example.instagram.LoginActivity;
@@ -36,7 +38,10 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -57,6 +62,8 @@ public class ComposeFragment extends Fragment {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     public String photoFileName = "photo.jpg";
     File photoFile;
+    boolean fromGal = false;
+    ParseFile photoFileFromGal;
     File profilePhoto;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -145,8 +152,11 @@ public class ComposeFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 photoFile = getPhotoFileUri(photoFileName);
+                Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
                 intent.setType("image/'");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
+                fromGal = true;
                 startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
             }
         });
@@ -158,6 +168,7 @@ public class ComposeFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == getActivity().RESULT_OK) {
                 // by this point we have the camera photo on disk
+                fromGal = false;
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
@@ -167,13 +178,30 @@ public class ComposeFragment extends Fragment {
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK) {
+            fromGal = true;
             Uri image = data.getData();
-            ivPic.setImageURI(image);
 
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
+                Glide.with(this).load(image).into(ivPic);
+                photoFileFromGal = conversionBitmapParseFile(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-
+    public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] imageByte = byteArrayOutputStream.toByteArray();
+        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
+        return parseFile;
+    }
     private void launchCamera() {
+        fromGal = false;
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference for future access
@@ -213,8 +241,12 @@ public class ComposeFragment extends Fragment {
     private void savePost(String des, ParseUser user) {
         Post post = new Post();
         post.setDescription(des);
-        post.setImage(new ParseFile(photoFile));
-        //post.setProfilePicture(post.getUser().getProfilePicture());
+        if (fromGal == true) {
+            post.setImage(photoFileFromGal);
+        } else {
+            post.setImage(new ParseFile(photoFile));
+        }
+
         post.setUser(user);
         post.saveInBackground(new SaveCallback() {
             @Override

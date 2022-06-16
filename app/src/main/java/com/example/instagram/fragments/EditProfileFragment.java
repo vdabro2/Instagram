@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.instagram.LoginActivity;
 import com.example.instagram.R;
 import com.parse.ParseException;
@@ -27,7 +29,10 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,7 +45,7 @@ public class EditProfileFragment extends Fragment {
     public final static int REQUEST_CODE_GALLERY = 43;
     TextView tvLogout;
     public String photoFileName = "photo.jpg";
-    File photoFile;
+    ParseFile photoFile;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -114,7 +119,6 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                photoFile = getPhotoFileUri(photoFileName);
                 intent.setType("image/'");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
@@ -125,22 +129,54 @@ public class EditProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK) {
-            Uri image = data.getData();
-            ivPP.setImageURI(image);
-            if (photoFile == null || ivPP.getDrawable() == null) {
-                Toast.makeText(getContext(), "Theres no photo", Toast.LENGTH_SHORT).show();
-                return;}
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
             ParseUser user  = ParseUser.getCurrentUser();
-            updateUser(photoFile, user);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(ivPP);
+                user.put("profilePicture", conversionBitmapParseFile(bitmap));
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e != null){
+
+                            Toast.makeText(getActivity(), "Error while saving", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 
-    private void updateUser(File photoFile, ParseUser user) {
+    public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] imageByte = byteArrayOutputStream.toByteArray();
+        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
+        return parseFile;
+    }
+
+    private void updateUser(ParseFile photoFile, ParseUser user) {
         //user.setFile()
+        user.put("profilePicture", photoFile);
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
+                if (e != null){
+                    Log.e(" EROOOR ", e.toString());
+                    return;
+                }
 
+                //ivPP.setImageURI();
             }
         });
     }
