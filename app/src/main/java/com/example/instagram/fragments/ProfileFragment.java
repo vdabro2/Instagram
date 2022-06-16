@@ -6,6 +6,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +23,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.instagram.LoginActivity;
 import com.example.instagram.Post;
+import com.example.instagram.PostsAdapter;
+import com.example.instagram.ProfileAdapter;
 import com.example.instagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -25,6 +32,7 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +40,13 @@ import java.util.List;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends PostsFragment {
+public class ProfileFragment extends Fragment {
     Button bLogout;
+    Button bEdit;
     TextView tvUserName;
     TextView tvRealName;
     ImageView ivProfilePicture;
+    TextView tvBio;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,6 +55,11 @@ public class ProfileFragment extends PostsFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    RecyclerView rvPosts;
+    protected ProfileAdapter adapter;
+    protected List<Post> allPosts;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -86,34 +101,46 @@ public class ProfileFragment extends PostsFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        //super.onViewCreated(view, savedInstanceState);
-        
+        super.onViewCreated(view, savedInstanceState);
+        rvPosts = view.findViewById(R.id.rvGrid);
+        allPosts = new ArrayList<>();
+        adapter = new ProfileAdapter(getContext(), allPosts);
+        rvPosts.setAdapter(adapter);
+        bEdit = view.findViewById(R.id.bEdit);
+        // set the layout manager on the recycler view
+        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        //ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
+        //mRecyclerView.addItemDecoration(itemDecoration);
+
         tvUserName = view.findViewById(R.id.tvUserName);
         tvUserName.setText(ParseUser.getCurrentUser().getUsername());
         ivProfilePicture = view.findViewById(R.id.ivPP);
         tvRealName = view.findViewById(R.id.tvRealName);
+        tvBio = view.findViewById(R.id.tvBio);
+        tvBio.setText(ParseUser.getCurrentUser().getString("biography"));
         //Log.e(" LA LA ", ParseUser.getCurrentUser().getString("name "));
-       // tvRealName.setText(ParseUser.getCurrentUser().getString("name "));
+       tvRealName.setText(ParseUser.getCurrentUser().getString("name"));
         ParseFile profilepic = ParseUser.getCurrentUser().getParseFile("profilePicture");
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
 
-        bLogout = view.findViewById(R.id.bLogout);
-        bLogout.setOnClickListener(new View.OnClickListener() {
+
+        bEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseUser.logOutInBackground();
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                Intent i = new Intent(getContext(), LoginActivity.class);
-                startActivity(i);
-
-
+                Fragment fragment = new EditProfileFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.flContainer, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
+        queryPosts();
     }
 
-    @Override
+
     protected void queryPosts() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);

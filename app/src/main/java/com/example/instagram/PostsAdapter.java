@@ -55,7 +55,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvUsername;
         private ImageView ivImage;
         private TextView tvDescription;
@@ -87,6 +87,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 Glide.with(context).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
             }
             tvUserInDes.setText(post.getUser().getUsername());
+
         }
 
 
