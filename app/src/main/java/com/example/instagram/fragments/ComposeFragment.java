@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.instagram.EndlessRecyclerViewScrollListener;
 import com.example.instagram.FeedActivity;
 import com.example.instagram.LoginActivity;
 import com.example.instagram.MainActivity;
