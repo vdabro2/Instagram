@@ -52,6 +52,10 @@ Here's a walkthrough of implemented user stories:
 
 <img src='/instagramlong.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
+This is a walkthrough of signing up and how you can see other peoples posts and start exploring as soon as you sign up!
+<img src='/instagramlong2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+
 ## Credits
 
 List an 3rd party libraries, icons, graphics, or other assets you used in your app.
