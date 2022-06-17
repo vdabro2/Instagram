@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/ivPP"
+            android:id="@+id/ivPP2"
             android:layout_width="100dp"
             android:layout_height="85dp"
             android:layout_marginTop="5dp"
@@ -41,8 +41,8 @@
             android:layout_marginStart="5dp"
             android:text="TextView"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/ivPP"
-            app:layout_constraintTop_toBottomOf="@+id/ivPP" />
+            app:layout_constraintStart_toStartOf="@+id/ivPP2"
+            app:layout_constraintTop_toBottomOf="@+id/ivPP2" />
 
         <TextView
             android:id="@+id/tvBio"
@@ -61,7 +61,7 @@
             android:layout_margin="0dp"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="2dp"
-            android:layoutDirection="rtl"
+            android:layoutDirection="ltr"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.666"
             app:layout_constraintStart_toStartOf="parent"

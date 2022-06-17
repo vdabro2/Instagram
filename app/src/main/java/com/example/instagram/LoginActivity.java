@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
@@ -18,7 +19,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText etPass;
     EditText etUsername;
     Button bLogin;
-
+    TextView signup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         etPass = findViewById(R.id.etPass);
         etUsername = findViewById(R.id.etUsername);
         bLogin = findViewById(R.id.bLogin);
+        signup = findViewById(R.id.tvSignUp);
         if (ParseUser.getCurrentUser() != null) {
             goMainActivity();
         }
@@ -35,6 +37,13 @@ public class LoginActivity extends AppCompatActivity {
                 String pass = etPass.getText().toString();
                 String user = etUsername.getText().toString();
                 loginUser(user, pass);
+            }
+        });
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(i);
             }
         });
     }

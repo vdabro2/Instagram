@@ -135,24 +135,23 @@ public class EditProfileFragment extends Fragment {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                 Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(ivPP);
-                user.put("profilePicture", conversionBitmapParseFile(bitmap));
-                user.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if(e != null){
 
-                            Toast.makeText(getActivity(), "Error while saving", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                    }
-                });
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            user.put("profilePicture", conversionBitmapParseFile(bitmap));
+            user.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Toast.makeText(getActivity(), "Error while saving", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Toast.makeText(getActivity(), " saved ", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
     }

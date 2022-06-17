@@ -1,6 +1,5 @@
 package com.example.instagram.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -21,9 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.instagram.LoginActivity;
 import com.example.instagram.Post;
-import com.example.instagram.PostsAdapter;
 import com.example.instagram.ProfileAdapter;
 import com.example.instagram.R;
 import com.parse.FindCallback;
@@ -102,6 +98,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ParseUser user  = ParseUser.getCurrentUser();
         rvPosts = view.findViewById(R.id.rvGrid);
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
@@ -109,21 +106,21 @@ public class ProfileFragment extends Fragment {
         bEdit = view.findViewById(R.id.bEdit);
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        //ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
-        //mRecyclerView.addItemDecoration(itemDecoration);
 
         tvUserName = view.findViewById(R.id.tvUserName);
-        tvUserName.setText(ParseUser.getCurrentUser().getUsername());
-        ivProfilePicture = view.findViewById(R.id.ivPP);
+        tvUserName.setText(user.getUsername());
+        ivProfilePicture = view.findViewById(R.id.ivPP2);
         tvRealName = view.findViewById(R.id.tvRealName);
         tvBio = view.findViewById(R.id.tvBio);
-        tvBio.setText(ParseUser.getCurrentUser().getString("biography"));
-        //Log.e(" LA LA ", ParseUser.getCurrentUser().getString("name "));
-       tvRealName.setText(ParseUser.getCurrentUser().getString("name"));
-        ParseFile profilepic = ParseUser.getCurrentUser().getParseFile("profilePicture");
+        tvBio.setText(user.getString("biography"));
+        tvRealName.setText(user.getString("name"));
+
+        ParseFile profilepic = user.getParseFile("profilePicture");
+
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
+
 
 
         bEdit.setOnClickListener(new View.OnClickListener() {

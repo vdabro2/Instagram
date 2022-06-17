@@ -1,5 +1,6 @@
 package com.example.instagram.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -62,6 +64,7 @@ public class ComposeFragment extends Fragment {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     public String photoFileName = "photo.jpg";
     File photoFile;
+    ProgressBar progressBar;
     boolean fromGal = false;
     ParseFile photoFileFromGal;
     File profilePhoto;
@@ -118,6 +121,7 @@ public class ComposeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects here
         // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
+         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         bSubmit = view.findViewById(R.id.bSubmit);
         etDescription = view.findViewById(R.id.etDescription);
@@ -248,6 +252,7 @@ public class ComposeFragment extends Fragment {
         }
 
         post.setUser(user);
+        progressBar.setVisibility(View.VISIBLE);
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -255,6 +260,7 @@ public class ComposeFragment extends Fragment {
                     Log.e("EROOOR", e.toString());
                     return;
                 }
+                progressBar.setVisibility(View.GONE);
                 etDescription.setText("");
                 ivPic.setImageResource(0);
             }
