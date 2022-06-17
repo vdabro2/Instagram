@@ -11,6 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -90,7 +91,6 @@ public class PostsFragment extends Fragment {
         rvPosts = view.findViewById(R.id.rvPosts);
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
-
         rvPosts.setAdapter(adapter);
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -122,6 +122,7 @@ public class PostsFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         // query posts from Parstagra
+
         queryPosts();
     }
 

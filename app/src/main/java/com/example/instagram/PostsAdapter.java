@@ -12,12 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.fragments.ComposeFragment;
+import com.example.instagram.fragments.DetailFragment;
+import com.example.instagram.fragments.ProfileFragment;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -114,11 +117,41 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Log.e(" on click in detail ", "whate");
-                    Intent i = new Intent(context, DetailsActivity.class);
-                    i.putExtra("post", (Serializable) post);
-                    context.startActivity(i);
+                    //Intent i = new Intent(context, DetailsActivity.class);
+                    //i.putExtra("post", (Serializable) post);
+                    //context.startActivity(i);
 
+                    DetailFragment profileFragment = new DetailFragment(post);
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
+                            profileFragment).addToBackStack(null).commit();
+
+                }
+            });
+
+            ivProfilePicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProfileFragment profileFragment = new ProfileFragment(post.getUser());
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
+                            profileFragment).addToBackStack(null).commit();
+                }
+            });
+            tvUsername.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProfileFragment profileFragment = new ProfileFragment(post.getUser());
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+                }
+            });
+            tvUserInDes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProfileFragment profileFragment = new ProfileFragment(post.getUser());
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
                 }
             });
 

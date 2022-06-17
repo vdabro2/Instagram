@@ -43,6 +43,7 @@ public class ProfileFragment extends Fragment {
     TextView tvRealName;
     ImageView ivProfilePicture;
     TextView tvBio;
+    ParseUser userProfile;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,6 +60,11 @@ public class ProfileFragment extends Fragment {
 
     public ProfileFragment() {
         // Required empty public constructor
+        userProfile = ParseUser.getCurrentUser();
+    }
+    public ProfileFragment(ParseUser user) {
+        // Required empty public constructor
+        userProfile = user;
     }
 
     /**
@@ -98,7 +104,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ParseUser user  = ParseUser.getCurrentUser();
+        //ParseUser user  = ParseUser.getCurrentUser();
         rvPosts = view.findViewById(R.id.rvGrid);
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
@@ -108,14 +114,14 @@ public class ProfileFragment extends Fragment {
         rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
         tvUserName = view.findViewById(R.id.tvUserName);
-        tvUserName.setText(user.getUsername());
+        tvUserName.setText(userProfile.getUsername());
         ivProfilePicture = view.findViewById(R.id.ivPP2);
         tvRealName = view.findViewById(R.id.tvRealName);
         tvBio = view.findViewById(R.id.tvBio);
-        tvBio.setText(user.getString("biography"));
-        tvRealName.setText(user.getString("name"));
+        tvBio.setText(userProfile.getString("biography"));
+        tvRealName.setText(userProfile.getString("name"));
 
-        ParseFile profilepic = user.getParseFile("profilePicture");
+        ParseFile profilepic = userProfile.getParseFile("profilePicture");
 
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
@@ -143,7 +149,7 @@ public class ProfileFragment extends Fragment {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
-        query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+        query.whereEqualTo(Post.KEY_USER, userProfile);
         // limit query to latest 20 items
         query.setLimit(20);
         // order posts by creation date (newest first)
