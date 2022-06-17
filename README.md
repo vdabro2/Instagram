@@ -70,6 +70,8 @@ List an 3rd party libraries, icons, graphics, or other assets you used in your a
 
 Describe any challenges encountered while building the app.
 
+Getting to know the Parse database. It took a lot of trial and error knowing what methods were used for what fields and for getting and posting. Once I figured it out though, it was much simpler than I thought.
+
 ## License
 
     Copyright [2022] [Violetta Dabros]
