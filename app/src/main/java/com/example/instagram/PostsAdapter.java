@@ -101,6 +101,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
+
             tvTime.setText(Post.calculateTimeAgo(post.getCreatedAt()));
 
             ParseFile profilepic = post.getUser().getParseFile("profilePicture");
