@@ -72,35 +72,10 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-    public void getPost(String postId) {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        // include data referred by user key
-        query.include(Post.KEY_USER);
-        query.whereEqualTo("objectId", postId);
-        // limit query to latest 20 items
-        query.setLimit(1);
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts, ParseException e) {
-                // check for errors
-                if (e != null) {
-                    Log.e("FEED", "Issue with getting posts", e);
-                    return;
-                }
-
-                // for debugging purposes let's print every post description to logcat
-                for (Post post : posts) {
-                    finalpost.add(post);
-                    Log.i("FEED", "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-                }
-                //finalpost.addAll(posts);
-
-            }
-        });
-    }
 
     private void liking(Post post) {
         List<String> list = ParseUser.getCurrentUser().getList("likedPosts");
+        ArrayList<String> list1 = new ArrayList<String>(list);
         String add = "";
         if (post.getNumber("likes").intValue() != 1) {
             add = " likes";
@@ -109,7 +84,7 @@ public class DetailsActivity extends AppCompatActivity {
         }
         tvLikes.setText(String.valueOf(post.getNumber("likes").intValue()) + add);
         boolean alreadyLiked = false;
-        if (list.contains(post.getObjectId())) {
+        if (list1.contains(post.getObjectId())) {
             alreadyLiked = true;
         }
         if (alreadyLiked) ivLikes.setImageResource(R.drawable.img_3);
@@ -117,18 +92,18 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 boolean alreadyLiked = false;
-                if (list.contains(post.getObjectId())) {
+                if (list1.contains(post.getObjectId())) {
                     alreadyLiked = true;
                 }
                 if (alreadyLiked) {
                     ivLikes.setImageResource(R.drawable.ufi_heart);
-                    list.remove(post.getObjectId());
-                    ParseUser.getCurrentUser().put("likedPosts", list);
+                    list1.remove(post.getObjectId());
+                    ParseUser.getCurrentUser().put("likedPosts", list1);
                     post.put("likes", post.getNumber("likes").intValue() - 1);
                 } else {
                     ivLikes.setImageResource(R.drawable.img_2);
-                    list.add(post.getObjectId());
-                    ParseUser.getCurrentUser().put("likedPosts", list);
+                    list1.add(post.getObjectId());
+                    ParseUser.getCurrentUser().put("likedPosts", list1);
                     post.put("likes", post.getNumber("likes").intValue() + 1);
                 }
 

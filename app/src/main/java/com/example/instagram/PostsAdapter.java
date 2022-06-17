@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.instagram.fragments.ComposeFragment;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -116,6 +117,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     Intent i = new Intent(context, DetailsActivity.class);
                     i.putExtra("post", (Serializable) post);
                     context.startActivity(i);
+
                 }
             });
 
@@ -124,7 +126,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private void liking(Post post) throws JSONException {
 
             List<String> list = ParseUser.getCurrentUser().getList("likedPosts");
+            ArrayList<String> list1 = new ArrayList<String>(list);
             String add = "";
+            //String add = "";
             if (post.getNumber("likes").intValue() != 1) {
                 add = " likes";
             } else {
@@ -132,7 +136,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             }
             tvLikes.setText(String.valueOf(post.getNumber("likes").intValue()) + add);
             boolean alreadyLiked = false;
-            if (list.contains(post.getObjectId())) {
+            if (list1.contains(post.getObjectId())) {
                 alreadyLiked = true;
             }
             if (alreadyLiked) ivLikes.setImageResource(R.drawable.img_3);
@@ -140,18 +144,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 @Override
                 public void onClick(View v) {
                     boolean alreadyLiked = false;
-                    if (list.contains(post.getObjectId())) {
+                    if (list1.contains(post.getObjectId())) {
                         alreadyLiked = true;
                     }
                     if (alreadyLiked) {
                         ivLikes.setImageResource(R.drawable.ufi_heart);
-                        list.remove(post.getObjectId());
-                        ParseUser.getCurrentUser().put("likedPosts", list);
+                        list1.remove(post.getObjectId());
+                        ParseUser.getCurrentUser().put("likedPosts", list1);
                         post.put("likes", post.getNumber("likes").intValue() - 1);
                     } else {
                         ivLikes.setImageResource(R.drawable.img_2);
-                        list.add(post.getObjectId());
-                        ParseUser.getCurrentUser().put("likedPosts", list);
+                        list1.add(post.getObjectId());
+                        ParseUser.getCurrentUser().put("likedPosts", list1);
                         post.put("likes", post.getNumber("likes").intValue() + 1);
                     }
 
